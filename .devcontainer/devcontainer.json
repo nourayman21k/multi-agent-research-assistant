@@ -1,0 +1,40 @@
+{
+  "name": "Multi-agent research assistant",
+  "image": "mcr.microsoft.com/devcontainers/python:3.13",
+
+  // install uv, then the project's dependencies (uv downloads Python 3.14 itself)
+  "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && ~/.local/bin/uv sync",
+  "remoteEnv": {
+    "PATH": "${containerEnv:PATH}:/home/vscode/.local/bin"
+  },
+  "containerEnv": {
+    "STREAMLIT_SERVER_HEADLESS": "true"
+  },
+
+  "forwardPorts": [8000, 8501],
+  "portsAttributes": {
+    "8000": { "label": "API (FastAPI)" },
+    "8501": { "label": "UI (Streamlit)", "onAutoForward": "openBrowser" }
+  },
+
+  // GitHub asks for these when the codespace is created; they become environment variables
+  "secrets": {
+    "GROQ_API_KEY": {
+      "description": "Free Groq API key (used for the gpt-oss-120b model).",
+      "documentationUrl": "https://console.groq.com/keys"
+    },
+    "HF_TOKEN": {
+      "description": "Free Hugging Face token with the 'Make calls to Inference Providers' permission (used for Qwen3-32B).",
+      "documentationUrl": "https://huggingface.co/settings/tokens"
+    }
+  },
+
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "ms-toolsai.jupyter"],
+      "settings": {
+        "python.defaultInterpreterPath": "${containerWorkspaceFolder}/.venv/bin/python"
+      }
+    }
+  }
+}
